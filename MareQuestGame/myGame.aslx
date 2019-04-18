@@ -1,0 +1,380 @@
+<!--Saved by Quest 5.8.6836.13983-->
+<asl version="580">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Mare">
+    <inherit name="theme_typewriter" />
+    <gameid>3f28080c-bce8-4480-9cf1-04e6ef3db9e8</gameid>
+    <version>1.0</version>
+    <firstpublished>2019</firstpublished>
+    <author>Xhoana Koca</author>
+    <category>Fantasy</category>
+    <attr name="feature_lightdark" type="boolean">false</attr>
+    <defaultforeground>White</defaultforeground>
+    <defaultbackground>Black</defaultbackground>
+    <menubackground>White</menubackground>
+    <menuforeground>Black</menuforeground>
+    <showpanes />
+    <customwidth type="int">900</customwidth>
+    <custompaddingtop type="int">60</custompaddingtop>
+    <custompaddingleft type="int">20</custompaddingleft>
+    <custompaddingright type="int">20</custompaddingright>
+    <setcustompadding />
+    <autodisplayverbs />
+    <defaultlinkforeground>Wheat</defaultlinkforeground>
+  </game>
+  <object name="bedroom">
+    <inherit name="editor_room" />
+    <isroom />
+    <dark type="boolean">false</dark>
+    <description type="script"><![CDATA[
+      firsttime {
+        msg ("<br/>You can feel something heavy in your chest, every second that passes making it more harder to breathe. You try to move your arm and body but it’s of no use. You can not feel anything. Pushing your body with all of your force in hope of movement but nothing. You try to scream, but your mouth is not moving. Your brain is the only one that can hear the scream. The only thing you can move are your eyes. Opening them you try to look around, but it’s difficult since you can not move your neck. You can feel a presence on the left side of your body. With difficulty you try to move your eyes in order to see. <br/><br/>You can see something dark move, it moves closer to you until it comes on top of your chest. Grabbing your neck making it more harder for you to breathe.<br/>You shut your eyes and try once again to make your body move. <br/><br/>Pushing your body with all of your force you finally begin to move up. Opening your eyes you decide to walk off the bed and look around. You can see a body laying in your bed with something on top of it. Looking more closer you notice that what you’re seeing is your own body. The weird creature turns around to look at you with a grin on its face and then it goes inside your lifeless body. Then you see the body move and walk off to the door. You try to stop it by talking and touching it but your hand goes right through the body. <br/><br/>You try to touch other items in the room but are unable to. While looking around you see some objects that don't belong in your room. You try and see if you can touch them and surprisingly you do.<br/><br/>")
+      }
+      otherwise {
+        msg ("<br/>You are back in your bedroom, everything is as you left it.")
+      }
+    ]]></description>
+    <firstenter type="script">
+      play sound ("Sad Piano - Victim.mp3", false, true)
+    </firstenter>
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+    </object>
+    <object name="book">
+      <inherit name="editor_object" />
+      <look><![CDATA[The book was covered in dust, but beneath it you could see the red leather cover. After you clean the cover you can read the title of the book <i>“Grimoire: Book of spells”.</i><br/>]]></look>
+      <take />
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <usedefaultprefix />
+      <alt type="stringlist">
+        <value>book of spell</value>
+        <value>grimoire</value>
+      </alt>
+      <linkcolour>DarkRed</linkcolour>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <attr name="feature_switchable" type="boolean">false</attr>
+      <usestandardverblist />
+      <feature_usegive />
+      <use />
+      <read type="script">
+        if (Got(book)) {
+          picture ("Capture.JPG")
+        }
+        else {
+          msg ("You can't read the book like that, you need to take it first.")
+        }
+      </read>
+      <ontake type="script">
+        MakeObjectVisible (book)
+      </ontake>
+      <ondrop type="script">
+        MakeObjectVisible (book)
+      </ondrop>
+      <useon type="scriptdictionary" />
+    </object>
+    <object name="container1">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <alias>Container</alias>
+      <feature_container />
+      <take />
+      <linkcolour>Wheat</linkcolour>
+      <transparent type="boolean">false</transparent>
+      <feature_usegive />
+      <contains type="boolean">false</contains>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+        <value>Open</value>
+        <value>Close</value>
+      </inventoryverbs>
+      <close />
+      <usestandardverblist type="boolean">false</usestandardverblist>
+      <look type="script"><![CDATA[
+        if (not Got(candle)) {
+          msg ("You look at the container and your hand starts to feel the lid. It has a carved beautiful flower. The shape of the container is round and it is surrounded by red leather.<br/>")
+          PrintCentered ("{img:container.jpg}")
+        }
+        else {
+          msg ("The candle fits perfectly in this container. It's as if it was made for it.")
+        }
+      ]]></look>
+      <ontake type="script">
+        MakeObjectVisible (container1)
+      </ontake>
+      <ondrop type="script">
+        MakeObjectVisible (container1)
+      </ondrop>
+      <onopen type="script">
+        if (GetBoolean(candle, "contains")) {
+          msg ("You open the container and see the object that you put inside it.")
+        }
+        else {
+          msg ("Container has nothing inside it.")
+        }
+      </onopen>
+      <addscript type="script">
+      </addscript>
+      <untie type="script">
+        if (red ribbon.isTied = true) {
+          msg ("You untie the ribbon from the container")
+          MakeObjectVisible (red ribbon)
+          SetObjectFlagOff (red ribbon, "isTied")
+        }
+        else {
+          msg ("You can't throw the container now. Follow the instructions for the spell.")
+        }
+      </untie>
+      <throw type="script">
+        if (your body.speakTimes = true) {
+          msg ("You throw the container at the evil spirit. The spirit leaves your body screaming and in a split of a second the spirit disappears into space. You can finally go back to your comfortable body.")
+          ChangePOV (your body)
+          finish
+        }
+        else {
+          msg ("You can't throw the container now.")
+        }
+      </throw>
+      <useon type="scriptdictionary">
+        <item key="red ribbon">
+          if (GetBoolean(herbs, "isLit")) {
+            msg ("You tie the ribbon around the container.")
+            SetObjectFlagOn (red ribbon, "isTied")
+            MakeObjectInvisible (red ribbon)
+            HelperCloseObject (container1)
+          }
+          else {
+            msg ("You can't tie the ribbon now you need to follow the steps for the spell.")
+          }
+        </item>
+      </useon>
+    </object>
+    <exit alias="east" to="hallway">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="hallway">
+    <inherit name="editor_room" />
+    <description>{img:drkhall.jpg}</description>
+    <exit alias="west" to="bedroom">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="north" to="Sister_room">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="down" to="living_room">
+      <inherit name="downdirection" />
+    </exit>
+  </object>
+  <object name="Sister_room">
+    <inherit name="editor_room" />
+    <alias>Sister's room</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <prefix>your </prefix>
+    <exit alias="south" to="hallway">
+      <inherit name="southdirection" />
+      <visible />
+    </exit>
+    <object name="herbs">
+      <inherit name="editor_object" />
+      <look><![CDATA[ The type of the herb that you found is named Asafetida. <br/>This stuff really stinks. You can burn it to drive away demons and other nasty spirits. When you burn it, the smoke will clear all spirits and magic.Be careful. This is powerful stuff.<br/><br/>]]></look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix> </prefix>
+      <alias>herbs</alias>
+      <take />
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <linkcolour>DarkGreen</linkcolour>
+      <isLit type="boolean">false</isLit>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+        <value>Use</value>
+      </inventoryverbs>
+      <ontake type="script">
+        MakeObjectVisible (herbs)
+      </ontake>
+      <ondrop type="script">
+        MakeObjectVisible (herbs)
+      </ondrop>
+      <use type="script">
+        msg ("You can't use the herbs on its own. You need something to burn them in order to fully use its power.")
+      </use>
+      <burn type="script">
+        if (Contains (container1,candle)) {
+          if (not GetBoolean(herbs, "isLit")) {
+            msg ("You put the herb in front of the candle. As the herb starts to burn the smell is getting worse.")
+            SetObjectFlagOn (herbs, "isLit")
+          }
+          MakeObjectInvisible (herbs)
+        }
+        else {
+          msg ("You need something to burn it with and you can't burn the herbs in open space. You need something like a container to catch the burn pieces.")
+        }
+      </burn>
+      <useon type="scriptdictionary" />
+    </object>
+    <object name="sisbody">
+      <inherit name="editor_object" />
+      <listalias type="string"></listalias>
+      <linkcolour>AntiqueWhite</linkcolour>
+      <alias>Sister</alias>
+      <visible />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>your </prefix>
+      <scenery type="boolean">false</scenery>
+      <look>Your sister is sleeping in her bed. One of her legs is hanging from the bed and her left hand is under her pillow. She looks really ugly right now. Her messy hair is wrapped around a red ribbon hair tie. </look>
+    </object>
+    <object name="red ribbon">
+      <inherit name="editor_object" />
+      <visible />
+      <take />
+      <linkcolour>PaleGoldenRod</linkcolour>
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <scenery />
+      <look type="string"></look>
+      <takemsg>You reach your hand and try to pull out the red ribbon without waking up your sister. Fortunately you are able to pick it up.</takemsg>
+      <alt type="stringlist">
+        <value>hair tie</value>
+      </alt>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Drop</value>
+      </inventoryverbs>
+      <isTied type="boolean">false</isTied>
+      <usestandardverblist />
+      <use type="script">
+      </use>
+      <ontake type="script">
+        MakeObjectVisible (red ribbon)
+      </ontake>
+      <ondrop type="script">
+        MakeObjectVisible (red ribbon)
+      </ondrop>
+      <selfuseon type="scriptdictionary" />
+      <useon type="scriptdictionary" />
+    </object>
+  </object>
+  <object name="living_room">
+    <inherit name="editor_room" />
+    <description><![CDATA[ It's just like you left it before you went to seep.<br/>{img:lvroom.jpg}]]></description>
+    <exit alias="up" to="hallway">
+      <inherit name="updirection" />
+    </exit>
+    <exit alias="northeast" to="bathroom">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="bathroom">
+    <inherit name="editor_room" />
+    <object name="your body">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <feature_player />
+      <alt type="stringlist">
+        <value>evil spirit</value>
+      </alt>
+      <speakTimes type="boolean">false</speakTimes>
+      <use type="script">
+      </use>
+      <speak type="script"><![CDATA[
+        if (game.pov.parent = bathroom) {
+          if (not Got(container1)) {
+            msg ("You can't talk to the evil spirit without doing the spell first.You are missing an object for your spell.")
+          }
+          else if (Contains (container1,candle)) {
+            if (Got(herbs)) {
+              msg ("You can't start the spell without burning the herbs.")
+            }
+            else if (GetBoolean(herbs, "isLit")) {
+              firsttime {
+                PrintCentered ("<b><i>Creature of cloth thou art,<br/>Creature of flesh and blood you be.<br/>I name you <br/>No more shall you do me harm.<br/>No more shall you interfere with my life or the lives of my loved ones.</i></b><br/>")
+                msg ("<br/><br/>The evil soul turns away from the mirror and looks at you. Fast you need to finish the spell before the evil spirit spend more time in your body.")
+              }
+              otherwise {
+                if (red ribbon.isTied = true) {
+                  PrintCentered ("<b><i>I bind your feet from bringing me harm.<br/>I bind your hands from reaching out to me.<br/>I bind your mouth from spreading false tales of me.<br/>I bind your mind from sending energy to harm me.<br/>May your negative energy be reflected back onto you.<br/>I have bound this person from harming me and those I love.<br/>I fix this spell then set it free<br/>As no harm shall return to me<br/>As I will, so mote it be.<br/><br/></i></b>")
+                  msg ("<br/><br/>The evil sould is slowly turning towards you.<br/><br/>Fast you need to finish.<br/><br/>")
+                  SetObjectFlagOn (your body, "speakTimes")
+                }
+                else {
+                  msg ("You need to follow the spell.")
+                }
+              }
+            }
+          }
+          else {
+            msg ("The evil spirit can not hear you right now. You need to start the spell to talk to the evil spirit.")
+          }
+        }
+      ]]></speak>
+      <look type="script">
+        if (game.pov = your body) {
+          msg ("You finally took your body back. You look at yourself in the mirror. Touching you face you can't believe you are finally back in you own body. You look at yourself in the mirror and you look better than ever")
+        }
+        else {
+          msg ("The evil spirit that is inside your body is looking at the reflection in the mirror. It's just standing there doing nothing. WEIRD")
+        }
+      </look>
+    </object>
+    <object name="candle">
+      <inherit name="editor_object" />
+      <look><![CDATA[The air was still and the flame barely flickered. It was steady and bright enough to relieve the darkness of the room, in the bathtub you could see the body that <i>once belonged to you</i>. The items around the candle cast shadows that radiated out as hands on an old analogue clock would. The wick blackened and the wax slowly turned to liquid, running down the side and onto the glass plate.<br/><br/><br/><br/>{img:candle.gif}]]></look>
+      <alt type="stringlist">
+        <value>light</value>
+      </alt>
+      <take />
+      <feature_usegive />
+      <linkcolour>Darkorange</linkcolour>
+      <ontake type="script">
+        MakeObjectVisible (candle)
+      </ontake>
+      <ondrop type="script">
+        MakeObjectVisible (candle)
+      </ondrop>
+      <use type="script">
+      </use>
+      <place type="script">
+        if (Got(container1)) {
+          if (container1.isopen) {
+            MoveObject (candle, container1)
+            msg ("You place the lighten candle inside the container.")
+          }
+          else {
+            msg ("The container needs to be open first in order to place the candle inside it.")
+          }
+        }
+        else {
+          msg ("You don't have a objects that you can place the candle")
+        }
+      </place>
+      <selfuseon type="scriptdictionary">
+        <item key="herbs">
+          if (Got(herbs)) {
+            msg ("You put the herbs near the candlelight and look at it burning. the smell is taking over the room.")
+            SetObjectFlagOn (candle, "isLit")
+          }
+        </item>
+      </selfuseon>
+    </object>
+    <exit alias="southwest" to="living_room">
+      <inherit name="southwestdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>place</property>
+    <pattern>place</pattern>
+    <defaultexpression>"You can't place " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>burn</property>
+    <pattern>burn</pattern>
+    <defaultexpression>"You can't burn " + object.article + "."</defaultexpression>
+  </verb>
+</asl>
